@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+      AFRAME.registerComponent("vidhandler", {
+        init: function () {
+          this.toggle = false;
+          this.vid = document.querySelector("#vid");
+          this.vid.pause();
+        },
+        tick: function () {
+          if (this.el.object3D.visible == true) {
+            if (!this.toggle) {
+              this.toggle = true;
+              this.vid.play();
+            }
+          } else {
+            this.toggle = false;
+            this.vid.pause();
+          }
+        },
+      });     
+      window.onload = function () {
+        document
+          .querySelector(".say-hi-button")
+          .addEventListener("click", function () {
+            const socailLinks = document.getElementById("socail-links");
+            socailLinks.style.display = "flex";
+            document.querySelector(".say-hi-button").style.display = "none";
+          });
+      };
+    </script>
+    <style>
+      .buttons {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+
+      .say-hi-button {
+        padding: 0.25em;
+        border-radius: 4px;
+        border: none;
+        background: white;
+        color: black;
+        width: 4em;
+        height: 2em;
+      }
+      .dataInfo {
+        background-color: black;
+        opacity: 0.6;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+        white-space: nowrap;
+        overflow-x: scroll;
+        display: none;
+      }
+      .dataInfo .socail ul,
+      .dataInfo .address ul,
+      .dataInfo .call ul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .dataInfo .socail ul li,
+      .dataInfo .address ul li,
+      .dataInfo .call ul li {
+        justify-content: space-between;
+        margin: 0 15px;
+        list-style: none;
+        padding: 0 10px;
+      }
+      .dataInfo .socail ul li i,
+      .dataInfo .address ul li i,
+      .dataInfo .call ul li i {
+        font-size: 30px;
+      }
+      .a-enter-vr-button {
+        display: none;
+      }
+      #arjsDebugUIContainer {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="buttons">
+      <button class="say-hi-button">Show</button>
+    </div>
+    <div class="dataInfo" id="socail-links">
+      <div class="socail">
+        <ul>
+          <li>
+            <a href="https://www.facebook.com"
+              ><i class="fa-brands fa-facebook"></i
+            ></a>
+          </li>
+          <li>
+            <a href="https://twitter.com"
+              ><i class="fa-brands fa-twitter" style="color: #1c5ac4"></i
+            ></a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com"
+              ><i class="fa-brands fa-instagram" style="color: #ba270d"></i
+            ></a>
+          </li>
+          <li>
+            <a href="https://wwww.linkedin.com"
+              ><i class="fa-brands fa-linkedin" style="color: #1760de"></i
+            ></a>
+          </li>
+        </ul>
+      </div>
+      <div class="call">
+        <ul>
+          <li>
+            <a href="mailto:balmbooms@gmail.com">Send email</a>
+          </li>
+          <li>
+            <a href="tel:1-234-867-5309">Call phone</a>
+          </li>
+        </ul>
+      </div>
+      <div class="address">
+        <ul>
+          <li>
+            <a href="">address</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <a-scene
+        embedded
+      artoolkit="sourceType: webcam; detectionMode: mono; maxDetectionRate: 60; canvasWidth: 200; canvasHeight: 200"
+    
+  >
+      <a-assets>
+        <video
+          preload="auto"
+          id="vid"
+          poster="ANY IMAGE PATH (THUMBNAIL)"
+          response-type="arraybuffer"
+          loop="false"
+          crossorigin
+          webkit-playsinline
+          playsinline
+          controls
+        >
+          <source src="./2.MP4" />
+          <img src="ANY IMAGE PATH (THUMBNAIL)" /> Your browser does not support
+          Or Else Please Click Reset Button.
+        </video>
+      </a-assets>
+      <a-marker
+        id="memarker"
+        url=""
+        vidhandler
+        cursor="rayOrigin: mouse"
+         type='pattern'
+          url='pattern.patt'
+         preset='custom'
+      >
+        <a-plane
+          position="0 0 .1 0"
+          width="4"
+          height="3"
+          rotation="-90 0 0"
+          material="transparent:true;src:#vid"
+          controls
+        ></a-plane>
+      <a-plane rotation="-90 0 0" width=".5"height=".5" position="-1.4 .4 -1 0" material="src: linkedin.png; transparent: true; opacity: 0.5"></a-plane>
+      </a-marker>
+      <a-entity camera></a-entity>
+    </a-scene>
+    <video src=></video>
+  </body>
+</html>
