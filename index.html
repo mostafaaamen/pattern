@@ -13,10 +13,14 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    
     <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!--    video internet speed  -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
     <script>
       AFRAME.registerComponent("vidhandler", {
         init: function () {
@@ -53,6 +57,41 @@
           });
           
       };
+//       video internet speed
+      // تحديد عنوان URL لملف الفيديو
+var videoUrl = './vid.mp4';
+
+// تحديد خيارات تشغيل الفيديو
+var videoOptions = {
+  // تمكين تقنية adaptive bitrate streaming
+  liveSyncDurationCount: 3,
+  liveMaxLatencyDurationCount: 5,
+  enableWorker: true,
+  enableWebVTT: true,
+  xhrSetup: function(xhr, url) {
+    xhr.setRequestHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+  }
+};
+
+// إنشاء مشغل الفيديو بواسطة "Hls.js"
+if (Hls.isSupported()) {
+  var video = document.getElementById('video');
+  var hls = new Hls(videoOptions);
+  hls.loadSource(videoUrl);
+  hls.attachMedia(video);
+  hls.on(Hls.Events.MANIFEST_PARSED, function() {
+    video.play();
+  });
+}
+// أو إنشاء مشغل الفيديو بواسطة "dash.js"
+else if (window.MediaSource) {
+  var video = document.getElementById('video');
+  var dash = dashjs.MediaPlayer().create();
+  dash.updateSettings(videoOptions);
+  dash.initialize(video, videoUrl, true);
+}
+
 
     </script>
    <link rel="stylesheet" href="style.css">
